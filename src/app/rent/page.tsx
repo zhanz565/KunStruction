@@ -1,7 +1,7 @@
-import SellWizard from '@/components/sell/SellWizard';
+import RentWizard from '@/components/rent/RentWizard';
 import Link from 'next/link';
 
-export default function SellPage() {
+export default function RentPage() {
   return (
     <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white pt-12">
       {/* Minimal Header */}
@@ -10,12 +10,12 @@ export default function SellPage() {
           Kunstruction
         </Link>
         <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
-          Disposition
+          Leasing
         </span>
       </header>
 
       {/* Wizard Form */}
-      <SellWizard />
+      <RentWizard />
     </main>
   );
 }

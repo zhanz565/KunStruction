@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 // --- REUSABLE UI COMPONENTS ---
 
-// NextArrow (Unchanged)
 function NextArrow({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -20,16 +19,12 @@ function NextArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
-// OptionSelect (UPDATED)
-// Removes block borders and backgrounds, adds a geometric diamond bullet.
-// Diamond is empty unselected, solid black selected. Text is Sentence Case.
 function OptionSelect({ label, isSelected, onClick }: { label: string, isSelected: boolean, onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 group"
     >
-      {/* Geometric Diamond Bullet */}
       <div className="w-6 h-6 flex items-center justify-center">
         <svg
           viewBox="0 0 100 100"
@@ -40,8 +35,6 @@ function OptionSelect({ label, isSelected, onClick }: { label: string, isSelecte
           <polygon points="50,0 100,50 50,100 0,50" />
         </svg>
       </div>
-
-      {/* Text Label */}
       <span className={`text-base font-medium transition-colors duration-300 ${isSelected ? 'text-black' : 'text-gray-700 group-hover:text-black'}`}>
         {label}
       </span>
@@ -64,7 +57,7 @@ type FormData = {
   phone: string;
 };
 
-export default function BuyWizard() {
+export default function RentWizard() {
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -82,7 +75,7 @@ export default function BuyWizard() {
     setIsSubmitted(true);
   };
 
-  // --------------------------------------------------------
+// --------------------------------------------------------
   // SUCCESS SCREEN
   // --------------------------------------------------------
   if (isSubmitted) {
@@ -91,9 +84,18 @@ export default function BuyWizard() {
         <h2 className="text-3xl font-bold tracking-tight mb-4 text-black">
           Inquiry received
         </h2>
-        <p className="text-gray-500 text-base leading-relaxed mb-10">
-          Sit tight. Our agent will email you the property list you requested shortly.
+        <p className="text-gray-500 text-base leading-relaxed mb-6">
+          Sit tight. Our agent will email you the rental property list you requested shortly.
         </p>
+        
+        {/* NEW: Document Upload Link */}
+        <Link 
+          href="/rent/documents" 
+          className="text-sm font-semibold text-black border-b border-black pb-1 mb-12 hover:text-gray-500 hover:border-gray-500 transition-colors"
+        >
+          Want to speed up your process? Get your documents ready.
+        </Link>
+
         <Link href="/">
           <button className="py-4 px-8 border border-black bg-black text-white text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-transparent hover:text-black">
             Return to Directory
@@ -109,7 +111,6 @@ export default function BuyWizard() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-      {/* Step Indicator - Keeping this small and uppercase as a structural element */}
       <span className="text-gray-400 font-mono text-xs tracking-widest mb-10">
         STEP 0{step} / 06
       </span>
@@ -122,7 +123,6 @@ export default function BuyWizard() {
             {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham'].map((loc) => (
               <OptionSelect key={loc} label={loc} isSelected={formData.location === loc} onClick={() => updateData('location', loc)} />
             ))}
-            {/* Keeping the 'Other' input plain and unbordered */}
             <input 
               type="text" 
               placeholder="Other (please specify)" 
@@ -172,26 +172,31 @@ export default function BuyWizard() {
         </div>
       )}
 
-      {/* STEP 4: BUDGET */}
+      {/* STEP 4: BUDGET (RENTAL BRACKETS) */}
       {step === 4 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Budget</h2>
           <div className="flex flex-col w-full">
-            {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
+            {['Under $1,000', '$1,000 - $1,500', '$1,500 - $2,000', '$2,000 - $3,000', '$3,000+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.budget === bg} onClick={() => updateData('budget', bg)} />
             ))}
+            <input 
+              type="text" 
+              placeholder="Other amount" 
+              className="w-full py-4.5 px-10 border-b border-gray-100 text-gray-800 placeholder-gray-400 font-medium text-base focus:outline-none focus:border-black focus:ring-1 focus:ring-black hover:border-gray-200 transition-all duration-300"
+              onChange={(e) => updateData('budget', e.target.value)}
+            />
           </div>
           <NextArrow onClick={nextStep} />
         </div>
       )}
 
-      {/* STEP 5: ROOMS (Unchanged) */}
+      {/* STEP 5: ROOMS */}
       {step === 5 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Rooms</h2>
           
           <div className="flex flex-col w-full border-t border-gray-200">
-            {/* Rooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of rooms
@@ -206,7 +211,6 @@ export default function BuyWizard() {
               />
             </div>
 
-            {/* Washrooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of washrooms
@@ -221,7 +225,6 @@ export default function BuyWizard() {
               />
             </div>
 
-            {/* Parkings Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of parkings
@@ -241,7 +244,7 @@ export default function BuyWizard() {
         </div>
       )}
 
-      {/* STEP 6: CONTACT (Unchanged) */}
+      {/* STEP 6: CONTACT */}
       {step === 6 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Contact</h2>

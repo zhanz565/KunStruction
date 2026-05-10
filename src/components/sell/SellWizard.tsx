@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 // --- REUSABLE UI COMPONENTS ---
 
-// NextArrow (Unchanged)
 function NextArrow({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -20,16 +19,13 @@ function NextArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
-// OptionSelect (UPDATED)
-// Removes block borders and backgrounds, adds a geometric diamond bullet.
-// Diamond is empty unselected, solid black selected. Text is Sentence Case.
+// OptionSelect with Geometric Diamond Bullet
 function OptionSelect({ label, isSelected, onClick }: { label: string, isSelected: boolean, onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 group"
     >
-      {/* Geometric Diamond Bullet */}
       <div className="w-6 h-6 flex items-center justify-center">
         <svg
           viewBox="0 0 100 100"
@@ -40,8 +36,6 @@ function OptionSelect({ label, isSelected, onClick }: { label: string, isSelecte
           <polygon points="50,0 100,50 50,100 0,50" />
         </svg>
       </div>
-
-      {/* Text Label */}
       <span className={`text-base font-medium transition-colors duration-300 ${isSelected ? 'text-black' : 'text-gray-700 group-hover:text-black'}`}>
         {label}
       </span>
@@ -52,10 +46,11 @@ function OptionSelect({ label, isSelected, onClick }: { label: string, isSelecte
 // --- MAIN WIZARD COMPONENT ---
 
 type FormData = {
+  style: string;
   location: string;
   size: string;
-  style: string;
-  budget: string;
+  price_bought: string;
+  price_sell: string;
   rooms_count: string;
   washrooms_count: string;
   parking_count: string;
@@ -64,11 +59,11 @@ type FormData = {
   phone: string;
 };
 
-export default function BuyWizard() {
+export default function SellWizard() {
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    location: '', size: '', style: '', budget: '', rooms_count: '', washrooms_count: '', parking_count: '', name: '', email: '', phone: ''
+    style: '', location: '', size: '', price_bought: '', price_sell: '', rooms_count: '', washrooms_count: '', parking_count: '', name: '', email: '', phone: ''
   });
 
   const updateData = (field: keyof FormData, value: string) => {
@@ -92,7 +87,7 @@ export default function BuyWizard() {
           Inquiry received
         </h2>
         <p className="text-gray-500 text-base leading-relaxed mb-10">
-          Sit tight. Our agent will email you the property list you requested shortly.
+          Sit tight. Our agent will email you shortly with the appointment time.
         </p>
         <Link href="/">
           <button className="py-4 px-8 border border-black bg-black text-white text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-transparent hover:text-black">
@@ -109,52 +104,12 @@ export default function BuyWizard() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-      {/* Step Indicator - Keeping this small and uppercase as a structural element */}
       <span className="text-gray-400 font-mono text-xs tracking-widest mb-10">
-        STEP 0{step} / 06
+        STEP 0{step} / 07
       </span>
 
-      {/* STEP 1: LOCATION */}
+      {/* STEP 1: STYLE */}
       {step === 1 && (
-        <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Location</h2>
-          <div className="flex flex-col w-full">
-            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham'].map((loc) => (
-              <OptionSelect key={loc} label={loc} isSelected={formData.location === loc} onClick={() => updateData('location', loc)} />
-            ))}
-            {/* Keeping the 'Other' input plain and unbordered */}
-            <input 
-              type="text" 
-              placeholder="Other (please specify)" 
-              className={`w-full py-4.5 px-10 transition-all duration-300 text-base font-medium focus:outline-none focus:ring-1 focus:ring-black border-b ${!['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham', ''].includes(formData.location) ? 'border-black text-black' : 'border-gray-100 text-gray-800 placeholder-gray-400 hover:border-gray-200'}`}
-              onChange={(e) => updateData('location', e.target.value)}
-            />
-          </div>
-          <NextArrow onClick={nextStep} />
-        </div>
-      )}
-
-      {/* STEP 2: SIZE */}
-      {step === 2 && (
-        <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Size</h2>
-          <div className="flex flex-col w-full">
-            {['Under 1000 sq. ft.', '1000 - 1500 sq. ft.', '1500 - 2000 sq. ft.', '2000 - 3000 sq. ft.', '3000+ sq. ft.'].map((sz) => (
-              <OptionSelect key={sz} label={sz} isSelected={formData.size === sz} onClick={() => updateData('size', sz)} />
-            ))}
-            <input 
-              type="text" 
-              placeholder="Other size" 
-              className="w-full py-4.5 px-10 border-b border-gray-100 text-gray-800 placeholder-gray-400 font-medium text-base focus:outline-none focus:border-black focus:ring-1 focus:ring-black hover:border-gray-200 transition-all duration-300"
-              onChange={(e) => updateData('size', e.target.value)}
-            />
-          </div>
-          <NextArrow onClick={nextStep} />
-        </div>
-      )}
-
-      {/* STEP 3: STYLE */}
-      {step === 3 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Style</h2>
           <div className="flex flex-col w-full">
@@ -172,26 +127,76 @@ export default function BuyWizard() {
         </div>
       )}
 
-      {/* STEP 4: BUDGET */}
+      {/* STEP 2: LOCATION */}
+      {step === 2 && (
+        <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Location</h2>
+          <div className="flex flex-col w-full">
+            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham'].map((loc) => (
+              <OptionSelect key={loc} label={loc} isSelected={formData.location === loc} onClick={() => updateData('location', loc)} />
+            ))}
+            <input 
+              type="text" 
+              placeholder="Other (please specify)" 
+              className={`w-full py-4.5 px-10 transition-all duration-300 text-base font-medium focus:outline-none focus:ring-1 focus:ring-black border-b ${!['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham', ''].includes(formData.location) ? 'border-black text-black' : 'border-gray-100 text-gray-800 placeholder-gray-400 hover:border-gray-200'}`}
+              onChange={(e) => updateData('location', e.target.value)}
+            />
+          </div>
+          <NextArrow onClick={nextStep} />
+        </div>
+      )}
+
+      {/* STEP 3: SIZE */}
+      {step === 3 && (
+        <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Size</h2>
+          <div className="flex flex-col w-full">
+            {['Under 1000 sq. ft.', '1000 - 1500 sq. ft.', '1500 - 2000 sq. ft.', '2000 - 3000 sq. ft.', '3000+ sq. ft.'].map((sz) => (
+              <OptionSelect key={sz} label={sz} isSelected={formData.size === sz} onClick={() => updateData('size', sz)} />
+            ))}
+            <input 
+              type="text" 
+              placeholder="Other size" 
+              className="w-full py-4.5 px-10 border-b border-gray-100 text-gray-800 placeholder-gray-400 font-medium text-base focus:outline-none focus:border-black focus:ring-1 focus:ring-black hover:border-gray-200 transition-all duration-300"
+              onChange={(e) => updateData('size', e.target.value)}
+            />
+          </div>
+          <NextArrow onClick={nextStep} />
+        </div>
+      )}
+
+      {/* STEP 4: PRICE BOUGHT */}
       {step === 4 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Budget</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you bought it with</h2>
           <div className="flex flex-col w-full">
             {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
-              <OptionSelect key={bg} label={bg} isSelected={formData.budget === bg} onClick={() => updateData('budget', bg)} />
+              <OptionSelect key={bg} label={bg} isSelected={formData.price_bought === bg} onClick={() => updateData('price_bought', bg)} />
             ))}
           </div>
           <NextArrow onClick={nextStep} />
         </div>
       )}
 
-      {/* STEP 5: ROOMS (Unchanged) */}
+      {/* STEP 5: PRICE SELL */}
       {step === 5 && (
+        <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you want to sell</h2>
+          <div className="flex flex-col w-full">
+            {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
+              <OptionSelect key={bg} label={bg} isSelected={formData.price_sell === bg} onClick={() => updateData('price_sell', bg)} />
+            ))}
+          </div>
+          <NextArrow onClick={nextStep} />
+        </div>
+      )}
+
+      {/* STEP 6: ROOMS */}
+      {step === 6 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Rooms</h2>
           
           <div className="flex flex-col w-full border-t border-gray-200">
-            {/* Rooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of rooms
@@ -206,7 +211,6 @@ export default function BuyWizard() {
               />
             </div>
 
-            {/* Washrooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of washrooms
@@ -221,7 +225,6 @@ export default function BuyWizard() {
               />
             </div>
 
-            {/* Parkings Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of parkings
@@ -241,8 +244,8 @@ export default function BuyWizard() {
         </div>
       )}
 
-      {/* STEP 6: CONTACT (Unchanged) */}
-      {step === 6 && (
+      {/* STEP 7: CONTACT */}
+      {step === 7 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Contact</h2>
           <div className="flex flex-col space-y-6 w-full mb-10">
