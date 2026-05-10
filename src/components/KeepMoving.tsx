@@ -1,0 +1,34 @@
+import Link from 'next/link';
+
+export default function KeepMoving() {
+  return (
+    <section className="w-full px-6 py-24 md:py-32 border-b border-gray-200 flex flex-col items-center">
+      <div className="max-w-4xl w-full flex flex-col items-center">
+        <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight mb-16">
+          1. Keep Moving
+        </h2>
+        
+        {/* Navigation Buttons */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
+          <Link href="/buy" className="group w-full">
+            <button className="w-full py-6 border-2 border-black bg-transparent text-black text-lg font-semibold uppercase tracking-wider transition-all duration-300 ease-in-out group-hover:bg-black group-hover:text-white">
+              Buy
+            </button>
+          </Link>
+          
+          <Link href="/sell" className="group w-full">
+            <button className="w-full py-6 border-2 border-black bg-transparent text-black text-lg font-semibold uppercase tracking-wider transition-all duration-300 ease-in-out group-hover:bg-black group-hover:text-white">
+              Sell
+            </button>
+          </Link>
+          
+          <Link href="/rent" className="group w-full">
+            <button className="w-full py-6 border-2 border-black bg-transparent text-black text-lg font-semibold uppercase tracking-wider transition-all duration-300 ease-in-out group-hover:bg-black group-hover:text-white">
+              Rent
+            </button>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
