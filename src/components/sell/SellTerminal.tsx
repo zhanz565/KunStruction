@@ -39,7 +39,7 @@ export default function SellTerminal() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [displayedText, currentStep, isTyping, isTerminated]);
+  }, [displayedText, currentStep, isTyping, isTerminated, customInput]);
 
   // Hollywood Hacker Typewriter Effect
   useEffect(() => {
@@ -81,7 +81,6 @@ export default function SellTerminal() {
   if (isTerminated) {
     return (
       <div className="relative min-h-screen bg-[#050505] text-[#00FF41] font-mono p-6 flex flex-col items-center justify-center selection:bg-[#00FF41] selection:text-black overflow-hidden">
-        {/* CRT Scanline Overlay */}
         <div className="pointer-events-none absolute inset-0 z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
         
         <div className="z-10 text-center animate-in fade-in zoom-in duration-700">
@@ -109,22 +108,19 @@ export default function SellTerminal() {
       className="relative min-h-screen bg-[#050505] text-[#00FF41] font-mono p-6 md:p-12 overflow-y-auto w-full selection:bg-[#00FF41] selection:text-black"
       ref={scrollRef}
     >
-      {/* CRT Scanline Overlay */}
       <div className="pointer-events-none fixed inset-0 z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
 
       <div className="max-w-4xl mx-auto w-full flex flex-col pt-8 pb-32 z-10 relative">
         
-        {/* Neon Hollywood Header */}
         <header className="mb-16 border-b border-[#00FF41]/30 pb-6 flex justify-between items-end">
           <h1 className="text-5xl md:text-6xl font-black tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#00FF41] to-[#008f11] drop-shadow-[0_0_15px_rgba(0,255,65,0.6)]">
             SELL
           </h1>
-          <span className="text-xs tracking-widest opacity-50 animate-pulse">
+          <span className="text-xs tracking-widest opacity-50 animate-pulse hidden md:inline-block">
             SECURE_UPLINK_ESTABLISHED
           </span>
         </header>
 
-        {/* Intro Text */}
         {currentStep === 0 && (
           <div className="mb-8 text-lg tracking-wider opacity-90 drop-shadow-[0_0_5px_rgba(0,255,65,0.4)]">
             {displayedText}
@@ -132,7 +128,6 @@ export default function SellTerminal() {
           </div>
         )}
 
-        {/* History Log */}
         {currentStep > 0 && QUESTIONS.slice(1, currentStep).map((q, idx) => (
           <div key={idx} className="mb-8 opacity-70">
             <div className="text-sm text-[#00FF41]/70 mb-1">{q.text}</div>
@@ -142,17 +137,15 @@ export default function SellTerminal() {
           </div>
         ))}
 
-        {/* Current Active Question */}
         {currentStep > 0 && currentStep < QUESTIONS.length - 1 && (
           <div className="mb-4 animate-in fade-in duration-300">
-            <div className="text-lg text-[#00FF41] drop-shadow-[0_0_5px_rgba(0,255,65,0.4)]">
+            <div className="text-lg text-[#00FF41] drop-shadow-[0_0_5px_rgba(0,255,65,0.4)] mb-4">
               {displayedText}
               {isTyping && <span className="animate-pulse bg-[#00FF41] w-3 h-5 inline-block ml-1 align-middle text-transparent">_</span>}
             </div>
 
-            {/* Render Button Choices - Styled like tactical grid buttons */}
             {!isTyping && (
-              <div className="mt-6 flex flex-wrap gap-4 animate-in fade-in slide-in-from-top-2 duration-500">
+              <div className="flex flex-wrap gap-4 animate-in fade-in slide-in-from-top-2 duration-500">
                 {OPTIONS[QUESTIONS[currentStep].id as keyof typeof OPTIONS]?.map(opt => (
                   <button
                     key={opt}
@@ -163,19 +156,31 @@ export default function SellTerminal() {
                   </button>
                 ))}
 
-                {/* Free Text Input for Rooms or Phone */}
                 {(QUESTIONS[currentStep].id === 'rooms' || QUESTIONS[currentStep].id === 'phone') && (
-                  <div className="flex items-center w-full max-w-sm mt-2">
+                  <div className="flex items-center w-full max-w-lg mt-2 flex-wrap gap-3">
                     <input
                       autoFocus
                       type={QUESTIONS[currentStep].id === 'phone' ? 'tel' : 'number'}
-                      className="bg-transparent border-b-2 border-[#00FF41] outline-none text-white text-xl font-mono w-full focus:ring-0 py-2 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
+                      className="bg-transparent border-b-2 border-[#00FF41] outline-none text-white text-xl font-mono flex-grow min-w-[200px] focus:ring-0 py-2 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
                       value={customInput}
                       onChange={e => setCustomInput(e.target.value)}
                       onKeyDown={handleInputSubmit}
-                      placeholder={QUESTIONS[currentStep].id === 'phone' ? 'Enter number and press Enter' : 'Enter amount and press Enter'}
+                      placeholder={QUESTIONS[currentStep].id === 'phone' ? 'Enter phone number' : 'Enter amount'}
                     />
-                    <span className="animate-pulse bg-white w-3 h-6 inline-block ml-2 align-middle text-transparent drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">_</span>
+                    <span className="animate-pulse bg-white w-3 h-6 inline-block align-middle text-transparent drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] mr-2">_</span>
+                    
+                    {/* NEW: Mobile-Friendly Enter Button */}
+                    {customInput.trim().length > 0 && (
+                      <button
+                        onClick={() => {
+                          handleSelect(customInput.trim());
+                          setCustomInput("");
+                        }}
+                        className="animate-in zoom-in duration-300 border border-[#00FF41] text-[#00FF41] hover:bg-[#00FF41] hover:text-black px-4 py-2 font-bold tracking-widest uppercase transition-all drop-shadow-[0_0_5px_rgba(0,255,65,0.5)]"
+                      >
+                        [ ENTER ↵ ]
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -183,7 +188,6 @@ export default function SellTerminal() {
           </div>
         )}
 
-        {/* DONE STATE */}
         {currentStep === QUESTIONS.length - 1 && (
           <div className="mt-12 pt-8 border-t border-[#00FF41]/30">
             <div className="text-xl text-[#00FF41] drop-shadow-[0_0_5px_rgba(0,255,65,0.5)] mb-10">
