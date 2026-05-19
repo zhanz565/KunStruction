@@ -2,10 +2,10 @@ import Gallery from '@/components/upgrade/Gallery';
 import { notFound } from 'next/navigation';
 
 const VALID_CATEGORIES = [
-  'living-room', 
-  'bathroom', 
-  'bedrooms', 
-  'walls', 
+  'living-room',
+  'wall',
+  'bedroom',
+  'bathroom'
 ];
 
 export default async function UpgradeCategoryPage({ params }: { params: Promise<{ category: string }> }) {

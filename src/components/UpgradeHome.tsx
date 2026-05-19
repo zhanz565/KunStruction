@@ -2,11 +2,11 @@ import Link from 'next/link';
 
 export default function UpgradeHome() {
 const categories = [
-    { name: 'Living Room', path: 'living-room' },
-    { name: 'Wall', path: 'wall' },
-    { name: 'Bedroom', path: 'bedroom' },
-    { name: 'Bathroom', path: 'bathroom' },
-  ];
+  { name: 'Living Room', path: 'living-room' },
+  { name: 'Wall', path: 'wall' },
+  { name: 'Bedroom', path: 'bedroom' },
+  { name: 'Bathroom', path: 'bathroom' },
+];
 
   return (
     <section className="w-full px-6 py-24 md:py-32 flex flex-col items-center border-b border-gray-200">
