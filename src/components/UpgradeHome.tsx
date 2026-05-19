@@ -1,12 +1,11 @@
 import Link from 'next/link';
 
 export default function UpgradeHome() {
-  const categories = [
-    { name: 'Bathroom', path: 'bathroom' },
-    { name: 'Kitchen', path: 'kitchen' },
+const categories = [
+    { name: 'Living Room', path: 'living-room' },
+    { name: 'Wall', path: 'wall' },
     { name: 'Bedroom', path: 'bedroom' },
-    { name: 'Basement', path: 'basement' },
-    { name: 'Backyard', path: 'backyard' },
+    { name: 'Bathroom', path: 'bathroom' },
   ];
 
   return (

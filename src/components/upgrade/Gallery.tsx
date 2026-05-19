@@ -1,72 +1,81 @@
 "use client";
 
+import { useEffect, useState } from 'react';
+import { client, urlFor } from '@/lib/sanity';
 import Link from 'next/link';
 
-interface GalleryProps {
-  category: string;
-}
+export default function Gallery({ category }: { category: string }) {
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function Gallery({ category }: GalleryProps) {
-  // Generate 24 mock items to fill the gallery
-  const mockItems = Array.from({ length: 24 }).map((_, i) => ({
-    id: i + 1,
-    brand: 'KUNSTRUCTION',
-    name: `${category} Concept Model 0${(i % 5) + 1}`,
-    price: `$${(Math.floor(Math.random() * 50) + 10) * 100}`,
-  }));
+  // Clean the URL parameter to match Sanity
+  const safeCategory = category.toLowerCase().replace(/%20/g, '-').replace(/ /g, '-');
+  const displayTitle = safeCategory.replace(/-/g, ' ');
+
+  useEffect(() => {
+    const query = `*[_type == "item" && category == $safeCategory] | order(_createdAt desc)`;
+    
+    client.fetch(query, { safeCategory })
+      .then((data) => {
+        setItems(data || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Sanity Fetch Error:", error);
+        setLoading(false);
+      });
+  }, [safeCategory]);
+
+  if (loading) {
+    return <div className="w-full min-h-screen flex items-center justify-center text-xs uppercase tracking-widest text-gray-400">Loading...</div>;
+  }
 
   return (
-    <div className="w-full min-h-screen bg-white text-black animate-in fade-in duration-700 pb-32">
+    <div className="w-full min-h-screen bg-white text-black font-sans flex flex-col animate-in fade-in duration-500">
       
-      {/* Top Utility Bar (Filters & Sorting) */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center text-xs font-medium uppercase tracking-widest text-gray-500">
-        <div className="flex gap-8">
-          <Link href="/" className="hover:text-black transition-colors">
-            ← Directory
-          </Link>
-          <span className="text-black">{category}</span>
-        </div>
+      {/* 1. Header */}
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-6 pt-16 pb-8 flex justify-between items-center">
+        <Link href="/" className="text-[11px] uppercase tracking-widest hover:text-gray-500 transition-colors w-24">
+          ← Back
+        </Link>
+        <h1 className="text-base md:text-xl font-black uppercase tracking-[0.25em] text-center flex-1">
+          {displayTitle}
+        </h1>
+        <div className="w-24"></div> {/* Spacer for perfect centering */}
+      </header>
+
+      {/* 2. Pure Image Gallery */}
+      <main className="flex-grow w-full max-w-[2000px] mx-auto px-4 md:px-8 pt-12 pb-24">
+        {items.length === 0 ? (
+          <div className="text-center py-32 text-[11px] text-gray-400 uppercase tracking-widest">
+            No works uploaded yet.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {items.map((item) => (
+              <div key={item._id} className="w-full aspect-[3/4] relative overflow-hidden bg-gray-50 group">
+                {item.image && (
+                  <img 
+                    src={urlFor(item.image).url()} 
+                    alt={item.name || 'Project image'} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* 3. The "Always at the Bottom" Inquiry Section */}
+      <div className="w-full bg-white border-t border-gray-200 py-20 flex flex-col items-center justify-center mt-auto">
         
-        <div className="flex gap-8">
-          {/* Future Filter Bar Hook */}
-          <button className="hover:text-black transition-colors focus:outline-none">
-            Filter +
+        {/* This link directs to the inquiry form you made */}
+        <Link href="/inquiry">
+          <button className="bg-black text-white px-12 py-5 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl hover:bg-gray-900 transition-transform duration-300 hover:scale-105">
+            Submit Inquiry
           </button>
-          <button className="hover:text-black transition-colors focus:outline-none hidden md:block">
-            Sort
-          </button>
-        </div>
-      </div>
-
-      {/* Product Grid - 4 columns on desktop, 2 on mobile */}
-      <div className="px-6 pt-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-16">
-          {mockItems.map((item) => (
-            <div key={item.id} className="flex flex-col group cursor-pointer">
-              
-              {/* Tall Image Placeholder (SSENSE style aspect ratio) */}
-              <div className="w-full aspect-[3/4] bg-gray-50 flex items-center justify-center mb-4 border border-transparent transition-colors duration-500 group-hover:border-gray-200">
-                <span className="text-xs font-mono text-gray-300 tracking-widest group-hover:text-gray-400 transition-colors">
-                  [ RENDER_{item.id} ]
-                </span>
-              </div>
-
-              {/* Minimalist Typography */}
-              <div className="flex flex-col text-[11px] md:text-xs leading-relaxed">
-                <span className="uppercase tracking-widest font-semibold text-black">
-                  {item.brand}
-                </span>
-                <span className="text-gray-600 capitalize mt-0.5">
-                  {item.name}
-                </span>
-                <span className="text-black font-medium mt-1">
-                  {item.price}
-                </span>
-              </div>
-
-            </div>
-          ))}
-        </div>
+        </Link>
       </div>
 
     </div>
