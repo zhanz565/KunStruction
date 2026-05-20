@@ -69,9 +69,6 @@ export default function Gallery({ category }: { category: string }) {
 
       {/* 3. The "Always at the Bottom" Design Section */}
       <div className="w-full bg-white border-t border-gray-200 py-24 flex flex-col items-center justify-center mt-auto">
-        <h2 className="text-sm text-gray-400 uppercase tracking-[0.25em] mb-8 text-center px-4">
-          Ready to transform your space?
-        </h2>
         
         <Link href="/design">
           <button className="bg-black text-white px-12 py-5 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl hover:bg-gray-900 transition-transform duration-300 hover:scale-105">

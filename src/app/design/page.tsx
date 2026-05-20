@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import OptionSelect from '@/components/OptionSelect'; // Ensure you have this component from earlier
+import OptionSelect from '../../components/OptionSelect';// Ensure you have this component from earlier
 
 // --- DATA DICTIONARY ---
 const SERVICES_DATA: Record<string, { title: string, price?: string, desc?: string, hasInput?: boolean }[]> = {
@@ -12,7 +12,7 @@ const SERVICES_DATA: Record<string, { title: string, price?: string, desc?: stri
     { title: "Medium room", price: "$700" },
     { title: "Large room", price: "$1000" },
     { title: "Kitchen cabinets", price: "$500" },
-    { title: "Whole house (walls only)", price: "$3000-$5000" },
+    { title: "Whole house (walls only)", price: "$3k-$5k" },
   ],
   "Floors": [
     { title: "Wood", price: "$500" },
@@ -22,18 +22,18 @@ const SERVICES_DATA: Record<string, { title: string, price?: string, desc?: stri
     { title: "Other stones", hasInput: true },
   ],
   "Cabinet and Shelfs": [
-    { title: "Bedroom dresser", price: "$1500" },
-    { title: "Study", price: "$1000" },
+    { title: "Bedroom dresser", price: "$1.5k" },
+    { title: "Study", price: "$1k" },
     { title: "Washroom", price: "$700" },
-    { title: "Laundry room storage", price: "$3000" },
-    { title: "Bed room upgrade", price: "$5000" },
-    { title: "Living room basement and garage", price: "$1500" },
+    { title: "Laundry room storage", price: "$3k" },
+    { title: "Bed room upgrade", price: "$5k" },
+    { title: "Living room basement and garage", price: "$1.5k" },
   ],
   "Light": [
-    { title: "灯条 LED", price: "$150+" },
-    { title: "极简风 Minimal light", price: "$200+" },
-    { title: "设计感 Designer light", price: "$300+" },
-    { title: "Whole space", price: "$1500+" },
+    { title: "LED", price: "$150+" },
+    { title: "Minimal light", price: "$200+" },
+    { title: "Designer light", price: "$300+" },
+    { title: "Whole space", price: "$1.5k" },
   ],
   "Hardware": [
     { title: "Handle", price: "$30+" },
@@ -115,9 +115,9 @@ export default function DesignWizard() {
   if (isSuccess) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center bg-white text-black px-6 text-center animate-in fade-in duration-1000">
-        <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Request Received</h2>
+        <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Received</h2>
         <p className="text-base text-gray-500 max-w-md leading-relaxed mb-12">
-          Our team will review your design specifications and contact you shortly.
+          we will be in touch with you soon! 
         </p>
         <Link href="/" className="text-sm font-semibold border-b border-black pb-1 hover:opacity-50 transition-opacity">
           Return to Directory
@@ -141,16 +141,13 @@ export default function DesignWizard() {
               ← Cancel
             </Link>
           )}
-          <span className="text-xs font-bold tracking-widest uppercase text-gray-300">
-            Step 0{step} / 03
-          </span>
         </div>
 
         {/* STEP 1: CHOOSE SERVICE */}
         {step === 1 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-12 text-black text-center">
-              Select a Service
+            Service
             </h1>
             <div className="flex flex-col w-full max-w-md mx-auto">
               {Object.keys(SERVICES_DATA).map((serviceName) => (
@@ -172,9 +169,9 @@ export default function DesignWizard() {
         {step === 2 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-black text-center">
-              {formData.service} Options
+              {formData.service}  
             </h1>
-            <p className="text-center text-gray-500 mb-12 text-sm">Select all that apply to your project.</p>
+            <p className="text-center text-gray-500 mb-12 text-sm">Select all that apply</p>
             
             <div className="flex flex-col w-full max-w-lg mx-auto space-y-2">
               {SERVICES_DATA[formData.service]?.map((item, idx) => (
@@ -230,8 +227,8 @@ export default function DesignWizard() {
         {/* STEP 3: CONTACT FORM */}
         {step === 3 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-black">Contact Details</h1>
-            <p className="text-base text-gray-500 mb-12">Submit your details to start the conversation.</p>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-black">Contact</h1>
+
 
             <div className="flex flex-col space-y-10 mb-12">
               <div className="flex flex-col">
