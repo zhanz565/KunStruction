@@ -60,7 +60,7 @@ export default function DocumentUpload() {
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] px-6 text-center animate-in fade-in duration-700">
         <h2 className="text-3xl font-bold tracking-tight mb-4 text-black">
-          Dossier Submitted
+           Submitted
         </h2>
         <p className="text-gray-500 text-base leading-relaxed mb-10">
           Thank you. Our agent will look at your documents and send you a property list if we find something you might like.

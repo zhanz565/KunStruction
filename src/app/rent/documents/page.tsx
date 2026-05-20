@@ -9,9 +9,6 @@ export default function RentDocumentsPage() {
         <Link href="/" className="text-xl font-black tracking-tighter uppercase hover:opacity-50 transition-opacity">
           Kunstruction
         </Link>
-        <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
-          Dossier Collection
-        </span>
       </header>
 
       {/* Document Upload Form */}

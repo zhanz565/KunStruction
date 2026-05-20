@@ -109,28 +109,43 @@ export default function BuyWizard() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-      {/* Step Indicator - Keeping this small and uppercase as a structural element */}
-      <span className="text-gray-400 font-mono text-xs tracking-widest mb-10">
-        STEP 0{step} / 06
-      </span>
 
-      {/* STEP 1: LOCATION */}
+{/* STEP 1: LOCATION */}
       {step === 1 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Location</h2>
-          <div className="flex flex-col w-full">
-            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham'].map((loc) => (
-              <OptionSelect key={loc} label={loc} isSelected={formData.location === loc} onClick={() => updateData('location', loc)} />
+          
+          <h2 className="text-4xl font-bold tracking-tight mb-12 text-black text-center">
+            Location
+          </h2>
+          
+          <div className="flex flex-col w-full max-w-md mx-auto">
+            {/* Client Request: Changed Markham to Milton */}
+            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Milton'].map((loc) => (
+              <OptionSelect 
+                key={loc} 
+                label={loc} 
+                isSelected={formData.location === loc} 
+                onClick={() => updateData('location', loc)} 
+              />
             ))}
-            {/* Keeping the 'Other' input plain and unbordered */}
+            
+            {/* Client Request: Removed the border-b line entirely */}
             <input 
               type="text" 
               placeholder="Other (please specify)" 
-              className={`w-full py-4.5 px-10 transition-all duration-300 text-base font-medium focus:outline-none focus:ring-1 focus:ring-black border-b ${!['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham', ''].includes(formData.location) ? 'border-black text-black' : 'border-gray-100 text-gray-800 placeholder-gray-400 hover:border-gray-200'}`}
+              className={`w-full py-4 px-10 transition-all duration-300 text-lg bg-transparent focus:outline-none ${
+                !['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Milton', ''].includes(formData.location) 
+                  ? 'text-black font-semibold' 
+                  : 'text-gray-500 font-medium placeholder-gray-400'
+              }`}
               onChange={(e) => updateData('location', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          
+          <div className="mt-8 w-full flex justify-center">
+            <NextArrow onClick={nextStep} />
+          </div>
+          
         </div>
       )}
 
@@ -177,7 +192,7 @@ export default function BuyWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Budget</h2>
           <div className="flex flex-col w-full">
-            {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
+            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.budget === bg} onClick={() => updateData('budget', bg)} />
             ))}
           </div>

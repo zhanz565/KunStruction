@@ -10,7 +10,7 @@ export default function NewMaterial() {
     <section className="w-full px-6 py-24 md:py-32 flex flex-col items-center bg-white text-black">
       <div className="max-w-6xl w-full flex flex-col items-center">
         <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-20 text-center">
-          3. New Material
+          New Material
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">

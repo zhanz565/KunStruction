@@ -5,7 +5,7 @@ export default function KeepMoving() {
     <section className="w-full px-6 py-24 md:py-32 border-b border-gray-200 flex flex-col items-center">
       <div className="max-w-4xl w-full flex flex-col items-center">
         <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight mb-16">
-          1. Keep Moving
+          Keep Moving
         </h2>
         
         {/* Navigation Buttons */}

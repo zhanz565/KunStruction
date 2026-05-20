@@ -111,16 +111,12 @@ export default function RentWizard() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-      <span className="text-gray-400 font-mono text-xs tracking-widest mb-10">
-        STEP 0{step} / 06
-      </span>
-
       {/* STEP 1: LOCATION */}
       {step === 1 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Location</h2>
           <div className="flex flex-col w-full">
-            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Markham'].map((loc) => (
+            {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Milton'].map((loc) => (
               <OptionSelect key={loc} label={loc} isSelected={formData.location === loc} onClick={() => updateData('location', loc)} />
             ))}
             <input 
@@ -177,7 +173,7 @@ export default function RentWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Budget</h2>
           <div className="flex flex-col w-full">
-            {['Under $1,000', '$1,000 - $1,500', '$1,500 - $2,000', '$2,000 - $3,000', '$3,000+'].map((bg) => (
+            {['Under $1k', '$1k - $1.5k', '$1.5k - $2k', '$2k - $3k', '$3k+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.budget === bg} onClick={() => updateData('budget', bg)} />
             ))}
             <input 

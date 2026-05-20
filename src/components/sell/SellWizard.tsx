@@ -104,9 +104,6 @@ export default function SellWizard() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-      <span className="text-gray-400 font-mono text-xs tracking-widest mb-10">
-        STEP 0{step} / 07
-      </span>
 
       {/* STEP 1: STYLE */}
       {step === 1 && (
@@ -170,7 +167,7 @@ export default function SellWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you bought it with</h2>
           <div className="flex flex-col w-full">
-            {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
+            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.price_bought === bg} onClick={() => updateData('price_bought', bg)} />
             ))}
           </div>
@@ -183,7 +180,7 @@ export default function SellWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you want to sell</h2>
           <div className="flex flex-col w-full">
-            {['Under $60,000', '$80,000 - $120,000', '$120,000 - $150,000', '$150,000 - $200,000', '$200,000+'].map((bg) => (
+            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.price_sell === bg} onClick={() => updateData('price_sell', bg)} />
             ))}
           </div>
