@@ -183,7 +183,8 @@ export default function DesignWizard() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-4 flex items-center justify-center">
-                        <svg viewBox="0 0 100 100" className={`w-3 h-3 transition-colors duration-300 ${formData.details.includes(item.title) ? 'fill-black' : 'fill-gray-200 group-hover:fill-gray-400'}`}>
+                        {/* The dynamic fill color is replaced with a permanent 'fill-black' */}
+                        <svg viewBox="0 0 100 100" className="w-3 h-3 fill-black transition-colors duration-300">
                           <polygon points="50,0 100,50 50,100 0,50" />
                         </svg>
                       </div>

@@ -16,9 +16,8 @@ export default function OptionSelect({ label, isSelected, onClick }: OptionSelec
       <div className="w-3 h-3 flex items-center justify-center">
         <svg
           viewBox="0 0 100 100"
-          className={`w-full h-full transition-colors duration-300 ${
-            isSelected ? 'fill-black' : 'fill-gray-200 group-hover:fill-gray-400'
-          }`}
+          // Removed the conditional logic, forcing 'fill-black'
+          className="w-full h-full fill-black transition-colors duration-300"
         >
           <polygon points="50,0 100,50 50,100 0,50" />
         </svg>
