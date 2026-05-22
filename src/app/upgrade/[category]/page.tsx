@@ -3,9 +3,11 @@ import { notFound } from 'next/navigation';
 
 const VALID_CATEGORIES = [
   'living-room',
-  'wall',
+  'kitchen',
   'bedroom',
-  'bathroom'
+  'bathroom',
+  'study-room',
+  'decor',
 ];
 
 export default async function UpgradeCategoryPage({ params }: { params: Promise<{ category: string }> }) {
