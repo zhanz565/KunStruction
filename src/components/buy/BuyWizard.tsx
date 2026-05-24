@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 // --- REUSABLE UI COMPONENTS ---
 
-// NextArrow (Unchanged)
 function NextArrow({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -20,16 +19,12 @@ function NextArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
-// OptionSelect (UPDATED)
-// Removes block borders and backgrounds, adds a geometric diamond bullet.
-// Diamond is empty unselected, solid black selected. Text is Sentence Case.
 function OptionSelect({ label, isSelected, onClick }: { label: string, isSelected: boolean, onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 group"
+      className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 active:opacity-50 group"
     >
-      {/* Geometric Diamond Bullet */}
       <div className="w-6 h-6 flex items-center justify-center">
         <svg
           viewBox="0 0 100 100"
@@ -41,7 +36,6 @@ function OptionSelect({ label, isSelected, onClick }: { label: string, isSelecte
         </svg>
       </div>
 
-      {/* Text Label */}
       <span className={`text-base font-medium transition-colors duration-300 ${isSelected ? 'text-black' : 'text-gray-700 group-hover:text-black'}`}>
         {label}
       </span>
@@ -67,6 +61,7 @@ type FormData = {
 export default function BuyWizard() {
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     location: '', size: '', style: '', budget: '', rooms_count: '', washrooms_count: '', parking_count: '', name: '', email: '', phone: ''
   });
@@ -77,14 +72,35 @@ export default function BuyWizard() {
 
   const nextStep = () => setStep((prev) => prev + 1);
 
-  const handleSubmit = () => {
-    console.log('Submit Data:', formData);
-    setIsSubmitted(true);
+  // Live Email Connection
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formName: 'Buy Form Inquiry',
+          ...formData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit message');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert('There was a problem sending your request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // --------------------------------------------------------
-  // SUCCESS SCREEN
-  // --------------------------------------------------------
   if (isSubmitted) {
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] px-6 text-center animate-in fade-in duration-700">
@@ -103,23 +119,16 @@ export default function BuyWizard() {
     );
   }
 
-  // --------------------------------------------------------
-  // WIZARD STEPS
-  // --------------------------------------------------------
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
-
-{/* STEP 1: LOCATION */}
+      {/* STEP 1: LOCATION */}
       {step === 1 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-          
           <h2 className="text-4xl font-bold tracking-tight mb-12 text-black text-center">
             Location
           </h2>
-          
           <div className="flex flex-col w-full max-w-md mx-auto">
-            {/* Client Request: Changed Markham to Milton */}
             {['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Milton'].map((loc) => (
               <OptionSelect 
                 key={loc} 
@@ -128,12 +137,10 @@ export default function BuyWizard() {
                 onClick={() => updateData('location', loc)} 
               />
             ))}
-            
-            {/* Client Request: Removed the border-b line entirely */}
             <input 
               type="text" 
               placeholder="Other (please specify)" 
-              className={`w-full py-4 px-10 transition-all duration-300 text-lg bg-transparent focus:outline-none ${
+              className={`w-full py-4 px-10 transition-all duration-300 text-base md:text-lg bg-transparent focus:outline-none ${
                 !['Toronto', 'Mississauga', 'Oakville', 'Burlington', 'Hamilton', 'Milton', ''].includes(formData.location) 
                   ? 'text-black font-semibold' 
                   : 'text-gray-500 font-medium placeholder-gray-400'
@@ -141,11 +148,9 @@ export default function BuyWizard() {
               onChange={(e) => updateData('location', e.target.value)}
             />
           </div>
-          
           <div className="mt-8 w-full flex justify-center">
             <NextArrow onClick={nextStep} />
           </div>
-          
         </div>
       )}
 
@@ -200,13 +205,11 @@ export default function BuyWizard() {
         </div>
       )}
 
-      {/* STEP 5: ROOMS (Unchanged) */}
+      {/* STEP 5: ROOMS */}
       {step === 5 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Rooms</h2>
-          
           <div className="flex flex-col w-full border-t border-gray-200">
-            {/* Rooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of rooms
@@ -215,13 +218,12 @@ export default function BuyWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('rooms_count', e.target.value)}
                 value={formData.rooms_count}
               />
             </div>
 
-            {/* Washrooms Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of washrooms
@@ -230,13 +232,12 @@ export default function BuyWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('washrooms_count', e.target.value)}
                 value={formData.washrooms_count}
               />
             </div>
 
-            {/* Parkings Row */}
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
                 Number of parkings
@@ -245,18 +246,17 @@ export default function BuyWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('parking_count', e.target.value)}
                 value={formData.parking_count}
               />
             </div>
           </div>
-
           <NextArrow onClick={nextStep} />
         </div>
       )}
 
-      {/* STEP 6: CONTACT (Unchanged) */}
+      {/* STEP 6: CONTACT */}
       {step === 6 && (
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Contact</h2>
@@ -290,10 +290,11 @@ export default function BuyWizard() {
             </div>
           </div>
           <button 
-            className="w-full py-5 border border-black bg-black text-white font-semibold tracking-wide hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            disabled={isSubmitting || !formData.name || !formData.email}
+            className="w-full py-5 border border-black bg-black text-white font-semibold tracking-wide hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:bg-gray-200 disabled:border-gray-200 disabled:text-gray-400"
             onClick={handleSubmit}
           >
-            Submit Inquiry
+            {isSubmitting ? 'Sending...' : 'Submit Inquiry'}
           </button>
         </div>
       )}

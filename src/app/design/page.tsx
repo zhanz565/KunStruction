@@ -99,16 +99,33 @@ export default function DesignWizard() {
     window.scrollTo(0, 0);
   };
 
-  const handleSubmit = async () => {
+ const handleSubmit = async () => {
     setIsSubmitting(true);
-    // TODO: Connect to your email API route here.
-    // Example: await fetch('/api/send-email', { method: 'POST', body: JSON.stringify(formData) });
     
-    // Simulating network request for now
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // We bundle the formData and add a 'formName' so the email knows what to call it
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formName: 'Design Service',
+          ...formData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
       setIsSuccess(true);
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      alert('There was a problem sending your request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // --- SUCCESS STATE ---

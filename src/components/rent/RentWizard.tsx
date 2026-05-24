@@ -23,7 +23,8 @@ function OptionSelect({ label, isSelected, onClick }: { label: string, isSelecte
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 group"
+      // Added active:opacity-50 for mobile tap feedback
+      className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 active:opacity-50 group"
     >
       <div className="w-6 h-6 flex items-center justify-center">
         <svg
@@ -60,6 +61,7 @@ type FormData = {
 export default function RentWizard() {
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     location: '', size: '', style: '', budget: '', rooms_count: '', washrooms_count: '', parking_count: '', name: '', email: '', phone: ''
   });
@@ -70,12 +72,36 @@ export default function RentWizard() {
 
   const nextStep = () => setStep((prev) => prev + 1);
 
-  const handleSubmit = () => {
-    console.log('Submit Data:', formData);
-    setIsSubmitted(true);
+  // Live Email Connection
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formName: 'Rent Form Inquiry',
+          ...formData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit message');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert('There was a problem sending your request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-// --------------------------------------------------------
+  // --------------------------------------------------------
   // SUCCESS SCREEN
   // --------------------------------------------------------
   if (isSubmitted) {
@@ -88,7 +114,7 @@ export default function RentWizard() {
           Sit tight. Our agent will email you the rental property list you requested shortly.
         </p>
         
-        {/* NEW: Document Upload Link */}
+        {/* Document Upload Link */}
         <Link 
           href="/rent/documents" 
           className="text-sm font-semibold text-black border-b border-black pb-1 mb-12 hover:text-gray-500 hover:border-gray-500 transition-colors"
@@ -201,7 +227,7 @@ export default function RentWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('rooms_count', e.target.value)}
                 value={formData.rooms_count}
               />
@@ -215,7 +241,7 @@ export default function RentWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('washrooms_count', e.target.value)}
                 value={formData.washrooms_count}
               />
@@ -229,7 +255,7 @@ export default function RentWizard() {
                 type="number" 
                 min="0"
                 placeholder="0"
-                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium"
+                className="w-24 p-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none text-center bg-transparent transition-all text-black font-medium text-base"
                 onChange={(e) => updateData('parking_count', e.target.value)}
                 value={formData.parking_count}
               />
@@ -274,10 +300,11 @@ export default function RentWizard() {
             </div>
           </div>
           <button 
-            className="w-full py-5 border border-black bg-black text-white font-semibold tracking-wide hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            disabled={isSubmitting || !formData.name || !formData.email}
+            className="w-full py-5 border border-black bg-black text-white font-semibold tracking-wide hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:bg-gray-200 disabled:border-gray-200 disabled:text-gray-400"
             onClick={handleSubmit}
           >
-            Submit Inquiry
+            {isSubmitting ? 'Sending...' : 'Submit Inquiry'}
           </button>
         </div>
       )}
