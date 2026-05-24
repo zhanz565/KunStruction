@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export default function UpgradeHome() {
-const categories = [
+  const categories = [
     { name: 'Kitchen', path: 'kitchen' },
     { name: 'Bedroom', path: 'bedroom' },
     { name: 'Bathroom', path: 'bathroom' },
@@ -23,8 +23,7 @@ const categories = [
             <Link 
               href={`/upgrade/${category.path}`} 
               key={category.name}
-              // Changed 'gap-5' to 'gap-1' for ultra-tight spacing
-              className="w-full flex items-center justify-start gap-1 py-4 transition-all duration-300 focus:outline-none group"
+              className="w-full flex items-center justify-start gap-1 py-5 md:py-4 transition-all duration-300 focus:outline-none group active:opacity-50"
             >
               <div className="w-3 h-3 flex items-center justify-center">
                 <svg
@@ -35,7 +34,6 @@ const categories = [
                 </svg>
               </div>
               
-              {/* Added 'ml-1' for fine-tuning */}
               <span className="text-base md:text-lg font-medium ml-1 text-gray-700 transition-colors duration-300 group-hover:text-black uppercase tracking-widest">
                 {category.name}
               </span>
