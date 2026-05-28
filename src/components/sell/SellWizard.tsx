@@ -221,7 +221,7 @@ export default function SellWizard() {
           <div className="flex flex-col w-full border-t border-gray-200">
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
-                Number of rooms
+                Number of Bedrooms
               </label>
               <input 
                 type="number" 

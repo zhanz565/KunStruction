@@ -197,7 +197,7 @@ export default function BuyWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black">Budget</h2>
           <div className="flex flex-col w-full">
-            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
+            {['Under $600k', '$600k - $900k', '$900k - $1.2M', '$1.2M - $1.5M', '$1.5M+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.budget === bg} onClick={() => updateData('budget', bg)} />
             ))}
           </div>
@@ -212,7 +212,7 @@ export default function BuyWizard() {
           <div className="flex flex-col w-full border-t border-gray-200">
             <div className="flex items-center justify-between w-full py-6 border-b border-gray-200 group">
               <label className="text-base font-medium text-gray-600 group-hover:text-black transition-colors cursor-pointer">
-                Number of rooms
+                Number of Bedrooms
               </label>
               <input 
                 type="number" 
