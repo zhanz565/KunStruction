@@ -2,9 +2,9 @@ import Gallery from '@/components/upgrade/Gallery';
 import { notFound } from 'next/navigation';
 
 const VALID_CATEGORIES = [
+  'bedroom',
   'living-room',
   'kitchen',
-  'bedroom',
   'bathroom',
   'study-room',
   'decor',
