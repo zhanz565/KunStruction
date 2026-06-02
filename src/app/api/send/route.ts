@@ -39,9 +39,9 @@ export async function POST(request: Request) {
 
     htmlContent += `</table></div>`;
 
-    const { data, error } = await resend.emails.send({
-      from: 'Kunstrucion Website <onboarding@resend.dev>',
-      to: ['Sophiachen0127@gmail.com'], // 👈 CHANGED THIS TO SOPHIA'S EMAIL
+const { data, error } = await resend.emails.send({
+      from: 'Kunstrucion Website <contact@kunstruction.ca>', // 👈 MUST USE YOUR VERIFIED DOMAIN
+      to: ['Sophiachen0127@gmail.com'], 
       subject: `New Lead: ${formName}`,
       html: htmlContent,
       attachments: attachments || [], 
