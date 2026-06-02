@@ -54,12 +54,12 @@ export default function Home() {
           color: #7181c8 !important;
         }
       `}} />
-
-      {/* Top Right Language Toggle */}
+      
+{/* Top Right Language Toggle */}
       <div style={{ position: 'fixed', top: '2rem', right: '2rem', zIndex: 9999 }}>
         <button 
           onClick={toggleLanguage} 
-          className="text-base md:text-xl font-medium tracking-widest text-gray-600 hover:text-black active:opacity-50 transition-colors duration-300"
+          className="text-base md:text-xl font-medium tracking-widest active:opacity-50 transition-opacity duration-300 bg-gradient-to-r from-[#7181c8] via-[#b7d3f4] to-[#f1cfed] bg-clip-text text-transparent hover:opacity-80"
         >
           {t('toggleBtn')}
         </button>
