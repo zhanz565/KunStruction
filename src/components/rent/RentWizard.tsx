@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -19,11 +19,27 @@ function NextArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
+function PrevArrow({ onClick, disabled }: { onClick: () => void, disabled?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`mt-12 w-14 h-14 border border-gray-300 flex items-center justify-center text-gray-500 transition-all duration-300 ${
+        disabled ? 'opacity-0 pointer-events-none' : 'hover:border-black hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2'
+      }`}
+      aria-label="Previous step"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+    </button>
+  );
+}
+
 function OptionSelect({ label, isSelected, onClick }: { label: string, isSelected: boolean, onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      // Added active:opacity-50 for mobile tap feedback
       className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 active:opacity-50 group"
     >
       <div className="w-6 h-6 flex items-center justify-center">
@@ -71,6 +87,7 @@ export default function RentWizard() {
   };
 
   const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
 
   // Live Email Connection
   const handleSubmit = async () => {
@@ -101,9 +118,6 @@ export default function RentWizard() {
     }
   };
 
-  // --------------------------------------------------------
-  // SUCCESS SCREEN
-  // --------------------------------------------------------
   if (isSubmitted) {
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] px-6 text-center animate-in fade-in duration-700">
@@ -131,9 +145,6 @@ export default function RentWizard() {
     );
   }
 
-  // --------------------------------------------------------
-  // WIZARD STEPS
-  // --------------------------------------------------------
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
@@ -152,7 +163,10 @@ export default function RentWizard() {
               onChange={(e) => updateData('location', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} disabled={step === 1} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -171,7 +185,10 @@ export default function RentWizard() {
               onChange={(e) => updateData('size', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -190,7 +207,10 @@ export default function RentWizard() {
               onChange={(e) => updateData('style', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -209,7 +229,10 @@ export default function RentWizard() {
               onChange={(e) => updateData('budget', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -262,7 +285,10 @@ export default function RentWizard() {
             </div>
           </div>
 
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -305,6 +331,12 @@ export default function RentWizard() {
             onClick={handleSubmit}
           >
             {isSubmitting ? 'Sending...' : 'Submit Inquiry'}
+          </button>
+          <button 
+            onClick={prevStep}
+            className="mt-6 text-sm font-medium text-gray-500 hover:text-black underline transition-colors focus:outline-none"
+          >
+            ← Go Back
           </button>
         </div>
       )}

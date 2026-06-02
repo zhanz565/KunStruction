@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -19,12 +19,28 @@ function NextArrow({ onClick }: { onClick: () => void }) {
   );
 }
 
+function PrevArrow({ onClick, disabled }: { onClick: () => void, disabled?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`mt-12 w-14 h-14 border border-gray-300 flex items-center justify-center text-gray-500 transition-all duration-300 ${
+        disabled ? 'opacity-0 pointer-events-none' : 'hover:border-black hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2'
+      }`}
+      aria-label="Previous step"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+    </button>
+  );
+}
+
 // OptionSelect with Geometric Diamond Bullet
 function OptionSelect({ label, isSelected, onClick }: { label: string, isSelected: boolean, onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      // Added active:opacity-50 for mobile tap feedback
       className="w-full flex items-center justify-start gap-4 py-3.5 transition-all duration-300 focus:outline-none border-b border-gray-100 hover:border-gray-200 active:opacity-50 group"
     >
       <div className="w-6 h-6 flex items-center justify-center">
@@ -73,6 +89,7 @@ export default function SellWizard() {
   };
 
   const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
 
   // Live Email Connection
   const handleSubmit = async () => {
@@ -103,9 +120,6 @@ export default function SellWizard() {
     }
   };
 
-  // --------------------------------------------------------
-  // SUCCESS SCREEN
-  // --------------------------------------------------------
   if (isSubmitted) {
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] px-6 text-center animate-in fade-in duration-700">
@@ -124,9 +138,6 @@ export default function SellWizard() {
     );
   }
 
-  // --------------------------------------------------------
-  // WIZARD STEPS
-  // --------------------------------------------------------
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh] px-6">
       
@@ -145,7 +156,10 @@ export default function SellWizard() {
               onChange={(e) => updateData('style', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} disabled={step === 1} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -164,7 +178,10 @@ export default function SellWizard() {
               onChange={(e) => updateData('location', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -183,7 +200,10 @@ export default function SellWizard() {
               onChange={(e) => updateData('size', e.target.value)}
             />
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -192,11 +212,14 @@ export default function SellWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you bought it with</h2>
           <div className="flex flex-col w-full">
-            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
+            {['Under $600k', '$600k - $900k', '$900k - $1.2M', '$1.2M - $1.5M', '$1.5M+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.price_bought === bg} onClick={() => updateData('price_bought', bg)} />
             ))}
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -205,11 +228,14 @@ export default function SellWizard() {
         <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h2 className="text-3xl font-bold tracking-tight mb-8 text-black text-center">Price you want to sell</h2>
           <div className="flex flex-col w-full">
-            {['Under $60k', '$60k - $90k', '$90k - $12k', '$120k - $150k', '$150k+'].map((bg) => (
+            {['Under $600k', '$600k - $900k', '$900k - $1.2M', '$1.2M - $1.5M', '$1.5M+'].map((bg) => (
               <OptionSelect key={bg} label={bg} isSelected={formData.price_sell === bg} onClick={() => updateData('price_sell', bg)} />
             ))}
           </div>
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -262,7 +288,10 @@ export default function SellWizard() {
             </div>
           </div>
 
-          <NextArrow onClick={nextStep} />
+          <div className="w-full flex items-center justify-between">
+            <PrevArrow onClick={prevStep} />
+            <NextArrow onClick={nextStep} />
+          </div>
         </div>
       )}
 
@@ -305,6 +334,12 @@ export default function SellWizard() {
             onClick={handleSubmit}
           >
             {isSubmitting ? 'Sending...' : 'Submit Inquiry'}
+          </button>
+          <button 
+            onClick={prevStep}
+            className="mt-6 text-sm font-medium text-gray-500 hover:text-black underline transition-colors focus:outline-none"
+          >
+            ← Go Back
           </button>
         </div>
       )}

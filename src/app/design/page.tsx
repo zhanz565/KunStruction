@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import OptionSelect from '../../components/OptionSelect';// Ensure you have this component from earlier
 
 // --- DATA DICTIONARY ---
 const SERVICES_DATA: Record<string, { title: string, price?: string, desc?: string, hasInput?: boolean }[]> = {
@@ -99,11 +98,10 @@ export default function DesignWizard() {
     window.scrollTo(0, 0);
   };
 
- const handleSubmit = async () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
     
     try {
-      // We bundle the formData and add a 'formName' so the email knows what to call it
       const response = await fetch('/api/send', {
         method: 'POST',
         headers: {
@@ -166,18 +164,41 @@ export default function DesignWizard() {
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-12 text-black text-center">
             Service
             </h1>
-            <div className="flex flex-col w-full max-w-md mx-auto">
-              {Object.keys(SERVICES_DATA).map((serviceName) => (
-                <OptionSelect 
-                  key={serviceName}
-                  label={serviceName}
-                  isSelected={formData.service === serviceName}
-                  onClick={() => {
-                    setFormData({ ...formData, service: serviceName, details: [] });
-                    setStep(2); // Auto-advance to save a click
-                  }}
-                />
-              ))}
+            <div className="flex flex-col w-full max-w-lg mx-auto space-y-2">
+              {Object.keys(SERVICES_DATA).map((serviceName) => {
+                const isSelected = formData.service === serviceName;
+                return (
+                  <div key={serviceName} className="flex flex-col border-b border-gray-100 last:border-0 py-4">
+                    <button 
+                      onClick={() => {
+                        setFormData({ ...formData, service: serviceName, details: [] });
+                        setStep(2); // Auto-advance to save a click
+                      }}
+                      className="w-full flex items-center justify-between text-left group focus:outline-none"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 flex items-center justify-center">
+                          <svg 
+                            viewBox="0 0 100 100" 
+                            className="w-3 h-3 transition-all duration-300"
+                          >
+                            <polygon 
+                              points="50,5 95,50 50,95 5,50" 
+                              fill={isSelected ? "currentColor" : "none"}
+                              stroke="currentColor"
+                              strokeWidth="10"
+                              className={isSelected ? "text-black" : "text-gray-300 group-hover:text-gray-400"}
+                            />
+                          </svg>
+                        </div>
+                        <span className={`text-lg transition-colors ${isSelected ? 'text-black font-semibold' : 'text-gray-600 group-hover:text-black'}`}>
+                          {serviceName}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -191,45 +212,56 @@ export default function DesignWizard() {
             <p className="text-center text-gray-500 mb-12 text-sm">Select all that apply</p>
             
             <div className="flex flex-col w-full max-w-lg mx-auto space-y-2">
-              {SERVICES_DATA[formData.service]?.map((item, idx) => (
-                <div key={idx} className="flex flex-col border-b border-gray-100 last:border-0 py-4">
-                  
-                  <button 
-                    onClick={() => toggleDetail(item.title)}
-                    className="w-full flex items-center justify-between text-left group focus:outline-none"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-4 flex items-center justify-center">
-                        {/* The dynamic fill color is replaced with a permanent 'fill-black' */}
-                        <svg viewBox="0 0 100 100" className="w-3 h-3 fill-black transition-colors duration-300">
-                          <polygon points="50,0 100,50 50,100 0,50" />
-                        </svg>
+              {SERVICES_DATA[formData.service]?.map((item, idx) => {
+                const isSelected = formData.details.includes(item.title);
+                return (
+                  <div key={idx} className="flex flex-col border-b border-gray-100 last:border-0 py-4">
+                    
+                    <button 
+                      onClick={() => toggleDetail(item.title)}
+                      className="w-full flex items-center justify-between text-left group focus:outline-none"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 flex items-center justify-center">
+                          <svg 
+                            viewBox="0 0 100 100" 
+                            className="w-3 h-3 transition-all duration-300"
+                          >
+                            <polygon 
+                              points="50,5 95,50 50,95 5,50" 
+                              fill={isSelected ? "currentColor" : "none"}
+                              stroke="currentColor"
+                              strokeWidth="10"
+                              className={isSelected ? "text-black" : "text-gray-300 group-hover:text-gray-400"}
+                            />
+                          </svg>
+                        </div>
+                        <span className={`text-lg transition-colors ${isSelected ? 'text-black font-semibold' : 'text-gray-600 group-hover:text-black'}`}>
+                          {item.title}
+                        </span>
                       </div>
-                      <span className={`text-lg transition-colors ${formData.details.includes(item.title) ? 'text-black font-semibold' : 'text-gray-600 group-hover:text-black'}`}>
-                        {item.title}
-                      </span>
-                    </div>
-                    {item.price && (
-                      <span className="text-sm font-medium text-gray-400">{item.price}</span>
+                      {item.price && (
+                        <span className="text-sm font-medium text-gray-400">{item.price}</span>
+                      )}
+                    </button>
+                    
+                    {item.desc && (
+                      <p className="text-sm text-gray-400 mt-2 pl-7 leading-relaxed">{item.desc}</p>
                     )}
-                  </button>
-                  
-                  {item.desc && (
-                    <p className="text-sm text-gray-400 mt-2 pl-7 leading-relaxed">{item.desc}</p>
-                  )}
 
-                  {/* Conditional Text Input for "Other stones" */}
-                  {item.hasInput && formData.details.includes(item.title) && (
-                    <input 
-                      type="text" 
-                      placeholder="Enter your stone type"
-                      value={formData.customStone}
-                      onChange={(e) => setFormData({...formData, customStone: e.target.value})}
-                      className="mt-4 ml-7 w-[calc(100%-1.75rem)] pb-2 border-b border-gray-200 text-black focus:outline-none focus:border-black text-sm bg-transparent"
-                    />
-                  )}
-                </div>
-              ))}
+                    {/* Conditional Text Input for "Other stones" */}
+                    {item.hasInput && isSelected && (
+                      <input 
+                        type="text" 
+                        placeholder="Enter your stone type"
+                        value={formData.customStone}
+                        onChange={(e) => setFormData({...formData, customStone: e.target.value})}
+                        className="mt-4 ml-7 w-[calc(100%-1.75rem)] pb-2 border-b border-gray-200 text-black focus:outline-none focus:border-black text-sm bg-transparent"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <button 
@@ -246,7 +278,6 @@ export default function DesignWizard() {
         {step === 3 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-black">Contact</h1>
-
 
             <div className="flex flex-col space-y-10 mb-12">
               <div className="flex flex-col">
